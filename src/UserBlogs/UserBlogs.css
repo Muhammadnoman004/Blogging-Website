@@ -124,6 +124,36 @@
     margin-top: -10px;
 }
 
+.footerDiv {
+    text-align: start;
+    padding: 10px 20px;
+    width: 100%;
+    background-color: white;
+}
+
+.footerDiv h6 {
+    font-size: 15px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+    word-spacing: 1px;
+    margin-bottom: 0;
+}
+
+.footerDiv a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.footerDiv a:hover {
+    color: rgb(3, 111, 199);
+    transition: 1ms;
+}
+
+.footerDiv p {
+    font-size: 12px;
+    word-spacing: 3px;
+}
+
 /* Media Query */
 
 @media screen and (max-width: 410px) {
