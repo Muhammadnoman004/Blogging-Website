@@ -241,6 +241,10 @@ export default function Profile() {
                     <button className='btn btn-primary updateBtn' onClick={() => UpdateBtn(CurrentUserDataID)}>Update</button>
                 </div>
             </div>
+            <div className='footerDiv'>
+                <h6>Made by <a target='https://github.com/Muhammadnoman004' href="https://github.com/Muhammadnoman004">Muhammad Noman.</a></h6>
+                <p>@2024-MyBlog | All rights reserved.</p>
+            </div>
         </div>
     )
 }
