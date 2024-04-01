@@ -23,9 +23,6 @@ export default function Dashboard() {
   let [ModalDes, setModalDes] = useState("")
   let navigate = useNavigate()
 
-  // console.log(Data);
-  console.log(ID);
-
   const BlogTitleInp = (e) => {
     setBlogTitle(e.target.value)
   }
@@ -141,18 +138,27 @@ export default function Dashboard() {
     console.log(id);
 
     const UpdateDataref = doc(db, "AllBlogs", id);
+    if (!updateBlogTitle || !updateBlogDes) {
 
-    await updateDoc(UpdateDataref, {
-      Title: ModalTitle,
-      Blog: ModalDes,
-      Update_Time: new Date().toLocaleString()
-    });
-    Swal.fire({
-      icon: "success",
-      title: "Good job",
-      text: "Updated Successfully!",
-    });
-    GetData(ID)
+      await updateDoc(UpdateDataref, {
+        Title: ModalTitle,
+        Blog: ModalDes,
+        Update_Time: new Date().toLocaleString()
+      });
+      Swal.fire({
+        icon: "success",
+        title: "Good job",
+        text: "Updated Successfully!",
+      });
+      GetData(ID)
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Good job",
+        text: "Updated Successfully!",
+      });
+
+    }
   }
 
   //  LOGOUT  //
@@ -183,7 +189,7 @@ export default function Dashboard() {
                 <a className="nav-link active" aria-current="page" href="#"></a>
               </li>
               <Link to={'/profile'}><button className='btn fullName' style={{ display: Data.Full_Name ? "block" : "none" }}>{Data.Full_Name}</button></Link>
-              <button className='btn home'>Home</button>
+              <Link to={'/UserHome'}><button className='btn home'>Home</button></Link>
               <button className='btn btn-primary logout' onClick={logOut}>Logout</button>
             </ul>
 
