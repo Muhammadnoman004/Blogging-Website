@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import './UserBlogs.css'
 import Navbar from '../Navbar/Navbar'
 import userImg from '../assets/user.png'
 import { Link } from 'react-router-dom'
+import { LoginUserID } from '../Context/Context'
 import { collection, query, where, getDocs, db } from '../Firebase Config/Config'
 
 export default function UserBlogs() {
 
+  const [ID, setID] = useContext(LoginUserID);
   const [userBlog, setuserBlog] = useState([])
   const [userProImg, setuserProImg] = useState("")
   const [userName, setuserName] = useState("")
@@ -37,7 +39,14 @@ export default function UserBlogs() {
   return (
     <div>
       <Navbar /><br /><br /><br /><br />
-      <Link to={'/'}><h1 id='BackToHome'><img id='backArrow' src="https://uxwing.com/wp-content/themes/uxwing/download/arrow-direction/arrow-left-direction-icon.svg" alt="" /> Back to home!</h1></Link>
+      {
+        ID ?
+          (
+            <Link to={'/'}><h1 id='BackToHome'><img id='backArrow' src="https://uxwing.com/wp-content/themes/uxwing/download/arrow-direction/arrow-left-direction-icon.svg" alt="" /> Back to home!</h1></Link>
+          ) : (
+            <Link to={'/UserHome'}><h1 id='BackToHome'><img id='backArrow' src="https://uxwing.com/wp-content/themes/uxwing/download/arrow-direction/arrow-left-direction-icon.svg" alt="" /> Back to home!</h1></Link>
+          )
+      }
 
       <div className="UserProfileDiv">
         <div className='UserProfileInnerDiv'>

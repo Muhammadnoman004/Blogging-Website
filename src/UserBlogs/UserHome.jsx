@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/blog-removebg-preview.png';
 import { signOut, auth } from '../Firebase Config/Config';
 import { LoginUser } from '../Context/Context'
+import Blogs from '../AllBlogs/Blogs';
 
 export default function UserHome() {
 
@@ -44,6 +45,9 @@ export default function UserHome() {
                     </div>
                 </div>
             </nav>
+            <br /><br /><br /><br />
+            <Blogs />
+
         </div>
     )
 }
