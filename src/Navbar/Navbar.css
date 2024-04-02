@@ -21,6 +21,36 @@
     font-size: 27px;
 }
 
+.dashboardNavBtn {
+    position: absolute;
+    right: 270px;
+    width: 100px;
+    border-radius: 360px;
+    margin-top: 12px;
+    border: 1px solid rgb(3, 120, 216);
+
+}
+
+.dashboardNavBtn:hover {
+    background-color: rgb(3, 120, 216);
+    color: white;
+}
+
+.LogOutNavBtn {
+    background-color: rgba(3, 120, 216, 0.877);
+    color: white;
+    position: absolute;
+    right: 30px;
+    width: 100px;
+    border-radius: 360px;
+    margin-top: 12px;
+}
+
+.LogOutNavBtn:hover {
+    background-color: rgb(3, 120, 216);
+    color: white;
+}
+
 .SinupNavBtn {
     position: absolute;
     right: 30px;

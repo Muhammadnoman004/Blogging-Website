@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import './UserBlogs.css'
 import Navbar from '../Navbar/Navbar'
 import userImg from '../assets/user.png'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { LoginUserID } from '../Context/Context'
 import { collection, query, where, getDocs, db } from '../Firebase Config/Config'
 
@@ -39,6 +39,24 @@ export default function UserBlogs() {
   return (
     <div>
       <Navbar /><br /><br /><br /><br />
+
+      {/* {ID ? (
+        <NavLink to={'/dashboard'}>
+          <button className='btn dashboardNavBtn'>Dashboard</button>
+          <NavLink to={'/profile'}>
+            <button className='btn LoginNavBtn'>Profile</button>
+            <NavLink to={'/'}>
+              <button className='btn LogOutNavBtn'>Logout</button>
+            </NavLink>
+          </NavLink>
+        </NavLink>
+
+      ) : (
+        <Link to={'/signup'}>
+          <button className='btn SinupNavBtn'>Sign Up</button>
+        </Link>
+      )} */}
+
       {
         ID ?
           (
