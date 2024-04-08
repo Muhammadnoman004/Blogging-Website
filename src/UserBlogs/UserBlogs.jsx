@@ -41,15 +41,18 @@ export default function UserBlogs() {
       <Navbar /><br /><br /><br /><br />
 
       {/* {ID ? (
-        <NavLink to={'/dashboard'}>
-          <button className='btn dashboardNavBtn'>Dashboard</button>
+        <>
+          <NavLink to={'/dashboard'}>
+            <button className='btn dashboardNavBtn'>Dashboard</button>
+          </NavLink>
           <NavLink to={'/profile'}>
             <button className='btn LoginNavBtn'>Profile</button>
-            <NavLink to={'/'}>
-              <button className='btn LogOutNavBtn'>Logout</button>
-            </NavLink>
           </NavLink>
-        </NavLink>
+          <NavLink to={'/'}>
+            <button className='btn LogOutNavBtn'>Logout</button>
+          </NavLink>
+        </>
+
 
       ) : (
         <Link to={'/signup'}>

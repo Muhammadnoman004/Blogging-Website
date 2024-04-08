@@ -61,6 +61,7 @@
     border-radius: 360px;
     aspect-ratio: 2 / 2;
     object-fit: contain;
+    background-color: rgb(206, 206, 206);
 }
 
 #userproHead {
