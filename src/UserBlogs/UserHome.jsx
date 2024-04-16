@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/blog-removebg-preview.png';
 import { signOut, auth } from '../Firebase Config/Config';
@@ -15,6 +16,13 @@ export default function UserHome() {
     const logOut = () => {
         signOut(auth).then(() => {
             // Sign-out successful.
+            Swal.fire({
+                position: "top-center",
+                icon: "success",
+                title: "Logout Successfully!",
+                showConfirmButton: false,
+                timer: 1500
+            });
             navigate('/')
         }).catch((error) => {
             // An error happened.

@@ -166,6 +166,13 @@ export default function Dashboard() {
   const logOut = () => {
     signOut(auth).then(() => {
       // Sign-out successful.
+      Swal.fire({
+        position: "top-center",
+        icon: "success",
+        title: "Logout Successfully!",
+        showConfirmButton: false,
+        timer: 1500
+      });
       navigate('/')
     }).catch((error) => {
       // An error happened.

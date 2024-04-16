@@ -188,6 +188,13 @@ export default function Profile() {
 
     const logOut = () => {
         signOut(auth).then(() => {
+            Swal.fire({
+                position: "top-center",
+                icon: "success",
+                title: "Logout Successfully!",
+                showConfirmButton: false,
+                timer: 1500
+            });
             navigate('/')
         }).catch((error) => {
             console.log(error);

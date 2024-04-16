@@ -1,3 +1,13 @@
+@keyframes MyAnime {
+    0% {
+        transform: scaleY(0);
+    }
+
+    100% {
+        transform: scaleY(1);
+    }
+}
+
 body {
     background-color: whitesmoke;
 }
@@ -10,6 +20,7 @@ body {
     border-radius: 10px;
     padding: 20px;
     box-shadow: 2px 3px 7px black;
+    animation: MyAnime 1s ease 0s 1 normal forwards;
 }
 
 #head {
