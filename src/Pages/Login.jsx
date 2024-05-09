@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import './Authentication.css'
 import { auth, signInWithEmailAndPassword, onAuthStateChanged } from '../Firebase Config/Config'
 import Navbar from '../Navbar/Navbar'
+import { Loader } from '../Context/Context'
+import LoaderComponent from '../LoaderComponent/LoaderComponent'
 
 export default function Login() {
 
+    const [loading, setloading] = useContext(Loader);
     let navigate = useNavigate()
     let [email, setemail] = useState('')
     let [password, setpassword] = useState('')
-
 
     const EmailInpValue = (e) => {
         setemail(e.target.value)
@@ -19,20 +21,15 @@ export default function Login() {
         setpassword(e.target.value)
     }
 
-
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
             navigate("/dashboard");
-        } else {
-            console.log("User not found");
         }
     });
 
-
     const LogInFun = () => {
-        console.log(email);
-        console.log(password);
+
         if (email == '' || password == '') {
             Swal.fire({
                 icon: "error",
@@ -41,9 +38,11 @@ export default function Login() {
             });
         }
         else {
+            setloading(true);
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
+                    setloading(false);
                     Swal.fire({
                         position: "top-center",
                         icon: "success",
@@ -51,7 +50,6 @@ export default function Login() {
                         showConfirmButton: false,
                         timer: 2000
                     });
-                    console.log(user);
                     setemail('')
                     setpassword('')
                     navigate('/dashboard')
@@ -64,15 +62,14 @@ export default function Login() {
                         title: "Oops...",
                         text: errorCode,
                     });
+                    setloading(false);
                 });
         }
     }
-
-
     return (
         <div>
-
             <Navbar />
+            {loading && <LoaderComponent />}
             <div className='mainDiv'>
                 <h1 id='head'>LogIn</h1>
                 <input onChange={EmailInpValue} value={email} className='form-control' placeholder='Email' type="email" name="" id="1" /><br />

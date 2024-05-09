@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom'
 import './Authentication.css'
 import { auth, createUserWithEmailAndPassword, onAuthStateChanged } from '../Firebase Config/Config'
 import { db, setDoc, doc } from '../Firebase Config/Config'
 import Navbar from '../Navbar/Navbar'
+import { Loader } from '../Context/Context'
+import LoaderComponent from '../LoaderComponent/LoaderComponent'
 
 export default function Signup() {
 
+    const [loading, setloading] = useContext(Loader);
     let navigate = useNavigate()
     let [name, setname] = useState('')
     let [email, setemail] = useState('')
@@ -28,22 +31,15 @@ export default function Signup() {
         setconfirmpassword(e.target.value)
     }
 
-
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
             navigate("/dashboard");
-        } else {
-            console.log("User not found");
         }
     });
 
-
     const SignUpFun = () => {
-        console.log(name);
-        console.log(email);
-        console.log(password);
-        console.log(confirmpassword);
+
         if (name == '' || email == '' || password == '' || confirmpassword == '') {
             Swal.fire({
                 icon: "error",
@@ -55,10 +51,10 @@ export default function Signup() {
             if (password == confirmpassword) {
                 New_Password = confirmpassword;
             }
+            setloading(true)
             createUserWithEmailAndPassword(auth, email, New_Password)
                 .then(async (userCredential) => {
                     const user = userCredential.user;
-                    console.log(user);
 
                     try {
                         await setDoc(doc(db, "users", user.uid), {
@@ -70,6 +66,8 @@ export default function Signup() {
 
                     } catch (e) {
                         console.error("Error adding document: ", e);
+                    } finally {
+                        setloading(false)
                     }
 
                     Swal.fire({
@@ -93,14 +91,15 @@ export default function Signup() {
                         title: "Oops...",
                         text: errorCode,
                     });
+                    setloading(false)
                 });
         }
 
     }
-
     return (
         <div>
             <Navbar />
+            {loading && <LoaderComponent />}
             <div className='mainDiv'>
                 <h1 id='head'>SignUp</h1>
                 <input onChange={NameInpValue} value={name} className='form-control' placeholder='Full Name' type="text" name="" id="1" /><br />
@@ -108,7 +107,6 @@ export default function Signup() {
                 <input onChange={PassInpValue} value={password} className='form-control' placeholder='Password' type="password" name="" id="3" /><br />
                 <input onChange={ConfirmPassInpValue} value={confirmpassword} className='form-control' placeholder='Confirm Password' type="password" name="" id="4" /><br />
                 <button onClick={SignUpFun} className='btn btn-primary LogsignUpBtn'>SignUp</button>
-
             </div>
         </div>
     )
