@@ -7,11 +7,14 @@ import logo from '../assets/blog-removebg-preview.png'
 import userImage from '../assets/user.png'
 import { auth, signOut } from '../Firebase Config/Config'
 import { db, addDoc, collection, onSnapshot, deleteDoc, updateDoc, doc, query, where, } from '../Firebase Config/Config'
-import { LoginUser, LoginUserID } from '../Context/Context'
+import { LoginUser, LoginUserID, Loader } from '../Context/Context'
+import LoaderComponent from '../LoaderComponent/LoaderComponent'
 
 export default function Dashboard() {
   const [Data, setData] = useContext(LoginUser);
   const [ID, setID] = useContext(LoginUserID);
+  const [loading, setloading] = useContext(Loader)
+
 
   let [UserBlogs, setUserBlogs] = useState([]);
   let [BlogTitle, setBlogTitle] = useState("");
@@ -39,14 +42,12 @@ export default function Dashboard() {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       let Array = []
       snapshot.docChanges().forEach((change) => {
-        // console.log(change);
         if (change.type === "added") {
           let allData = {
             id: change.doc.id,
             ...change.doc.data(),
           }
           Array.push(allData)
-          console.log("Array ==> ", Array);
         }
         if (change.type === "modified") {
           let allData = {
@@ -83,7 +84,7 @@ export default function Dashboard() {
       });
     }
     else {
-
+      setloading(true)
       try {
         const docRef = await addDoc(collection(db, "AllBlogs"), {
           Title: BlogTitle,
@@ -92,6 +93,7 @@ export default function Dashboard() {
           UserData: Data,
           Date: new Date().toLocaleDateString()
         });
+        setloading(false)
         Swal.fire({
           icon: "success",
           title: "Good job",
@@ -100,19 +102,20 @@ export default function Dashboard() {
         GetData(ID)
         setBlogTitle("")
         setBlogDes("")
-        console.log(BlogTitle);
-        console.log(BlogDes);
-        console.log("Document written with ID: ", docRef.id);
+
       } catch (e) {
         console.error("Error adding document: ", e);
       }
+      setloading(false)
     }
   }
 
   //  DELETE DATA FROM DATABASE //
 
   const DelData = async (id) => {
+    setloading(true)
     await deleteDoc(doc(db, "AllBlogs", id));
+    setloading(false)
     Swal.fire({
       icon: "error",
       title: "Delete...",
@@ -127,22 +130,20 @@ export default function Dashboard() {
     setupdateBlogTitle(data.Title)
     setupdateBlogDes(data.Blog)
     setupdateBlogID(data.id)
-    console.log(data.id);
-    console.log(updateBlogTitle);
-    console.log(updateBlogDes);
+
   }
 
   //  UPDATE DATA FROM DATABASE //
 
   const updateData = async (id) => {
-    console.log(id);
 
     const UpdateDataref = doc(db, "AllBlogs", id);
-    if (!updateBlogTitle || !updateBlogDes) {
+
+    if (!ModalTitle && !ModalDes) {
 
       await updateDoc(UpdateDataref, {
-        Title: ModalTitle,
-        Blog: ModalDes,
+        Title: updateBlogTitle,
+        Blog: updateBlogDes,
         Update_Time: new Date().toLocaleString()
       });
       Swal.fire({
@@ -150,14 +151,71 @@ export default function Dashboard() {
         title: "Good job",
         text: "Updated Successfully!",
       });
+      setModalTitle('')
+      setModalDes('')
+      setupdateBlogTitle('')
+      setupdateBlogDes('')
       GetData(ID)
-    } else {
+
+    }
+    else if (!ModalTitle) {
+      setloading(true)
+      await updateDoc(UpdateDataref, {
+        Title: updateBlogTitle,
+        Blog: ModalDes,
+        Update_Time: new Date().toLocaleString()
+      });
+      setloading(false)
       Swal.fire({
         icon: "success",
         title: "Good job",
         text: "Updated Successfully!",
       });
+      setModalTitle('')
+      setModalDes('')
+      setupdateBlogTitle('')
+      setupdateBlogDes('')
+      GetData(ID)
+    }
+    else if (!ModalDes) {
+      setloading(true)
+      await updateDoc(UpdateDataref, {
+        Title: ModalTitle,
+        Blog: updateBlogDes,
+        Update_Time: new Date().toLocaleString()
+      });
+      setloading(false)
+      Swal.fire({
+        icon: "success",
+        title: "Good job",
+        text: "Updated Successfully!",
+      });
+      setModalTitle('')
+      setModalDes('')
+      setupdateBlogTitle('')
+      setupdateBlogDes('')
+      GetData(ID)
 
+    }
+
+    else {
+      setloading(true)
+      await updateDoc(UpdateDataref, {
+        Title: ModalTitle,
+        Blog: ModalDes,
+        Update_Time: new Date().toLocaleString()
+      });
+      setloading(false)
+      Swal.fire({
+        icon: "success",
+        title: "Good job",
+        text: "Updated Successfully!",
+      });
+      setModalTitle('')
+      setModalDes('')
+      setupdateBlogTitle('')
+      setupdateBlogDes('')
+      GetData(ID)
     }
   }
 
@@ -205,6 +263,7 @@ export default function Dashboard() {
       </nav>
       <br /><br /><br /><br />
       <h1 id='dash'><span>D</span>ashboard</h1>
+      {loading && <LoaderComponent />}
 
       <div className='BlogTitleDiv'>
 
@@ -219,6 +278,7 @@ export default function Dashboard() {
         </div>
         <button className='btn btn-primary publishBtn' onClick={AddBlog}>Publish Blog</button>
       </div>
+
 
       <h2 id='AllBlogs'>All Blogs</h2>
 
