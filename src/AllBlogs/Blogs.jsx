@@ -15,7 +15,6 @@ export default function Blogs() {
     let Array = []
     querySnapshot.forEach((doc) => {
       Array.push(doc.data())
-      console.log(doc.id, " => ", doc.data());
     });
     setAllData(Array)
   }

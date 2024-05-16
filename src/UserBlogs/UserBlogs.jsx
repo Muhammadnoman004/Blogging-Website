@@ -3,11 +3,13 @@ import './UserBlogs.css'
 import Navbar from '../Navbar/Navbar'
 import userImg from '../assets/user.png'
 import { Link, NavLink } from 'react-router-dom'
-import { LoginUserID } from '../Context/Context'
+import { LoginUserID, Loader } from '../Context/Context'
 import { collection, query, where, getDocs, db } from '../Firebase Config/Config'
+import LoaderComponent from '../LoaderComponent/LoaderComponent'
 
 export default function UserBlogs() {
 
+  const [loading, setloading] = useContext(Loader)
   const [ID, setID] = useContext(LoginUserID);
   const [userBlog, setuserBlog] = useState([])
   const [userProImg, setuserProImg] = useState("")
@@ -16,14 +18,13 @@ export default function UserBlogs() {
 
   const URlParams = new URLSearchParams(window.location.search)
   const UserParams = URlParams.get("user")
-  console.log(UserParams);
 
   const getUserBlog = async () => {
+    setloading(true);
     let Arry = []
     const q = query(collection(db, "AllBlogs"), where("Uid", "==", UserParams));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
       setuserProImg(doc.data().UserData.ImageURL);
       setuserName(doc.data().UserData.Full_Name);
       setuserEmail(doc.data().UserData.Email);
@@ -31,6 +32,7 @@ export default function UserBlogs() {
       setuserBlog(Arry)
 
     });
+    setloading(false);
   }
   useEffect(() => {
     getUserBlog()
@@ -69,6 +71,7 @@ export default function UserBlogs() {
           )
       }
 
+      {loading && <LoaderComponent />}
       <div className="UserProfileDiv">
         <div className='UserProfileInnerDiv'>
           <img src={!userProImg ? userImg : userProImg} alt="" id='UserProfileImg' />

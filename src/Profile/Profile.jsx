@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import './Profile.css'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../assets/blog-removebg-preview.png'
 import UserProImg from '../assets/user.png'
+import { Loader } from '../Context/Context'
 import { auth, signOut, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from '../Firebase Config/Config'
 import { doc, db, getDoc, updateDoc, onAuthStateChanged } from '../Firebase Config/Config'
 import { storage, ref, uploadBytesResumable, getDownloadURL } from '../Firebase Config/Config'
+import LoaderComponent from '../LoaderComponent/LoaderComponent'
 
 export default function Profile() {
 
+    const [loading, setloading] = useContext(Loader)
     let [CurrentUser, setCurrentUser] = useState([]);
     let [CurrentUserDataID, setCurrentUserDataID] = useState("");
     let [ProfileImg, setProfileImg] = useState("");
@@ -40,14 +43,11 @@ export default function Profile() {
                 (snapshot) => {
                     const progress =
                         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log('Upload is ' + progress + '% done');
 
                     switch (snapshot.state) {
                         case "paused":
-                            console.log('Upload is paused');
                             break;
                         case "running":
-                            console.log("running");
                             break;
                     }
                 },
@@ -71,7 +71,7 @@ export default function Profile() {
     //  GETDATA TO CURRENTUSER    //
 
     useEffect(() => {
-
+        setloading(true)
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const uid = user.uid;
@@ -89,10 +89,11 @@ export default function Profile() {
                 } else {
                     console.log("No such document!");
                 }
-
+                setloading(false)
             } else {
                 console.log("User not found");
             }
+            setloading(false)
         });
 
     }, [])
@@ -100,17 +101,17 @@ export default function Profile() {
     //  UPDATE PROFILE  //
 
     const UpdateBtn = async (uid) => {
+        setloading(true)
         const userDataRef = doc(db, "users", uid);
         let ProfileURL = await downloadImageUrl(ImgFiles);
-        console.log("PRofile", ProfileURL);
 
-        if (UpdateUserName == "" || ImgFiles == "") {
+        if (!UpdateUserName || !ImgFiles) {
             setUpdateUserName(CurrentUser.Full_Name);
             await updateDoc(userDataRef, {
                 Full_Name: CurrentUser.Full_Name,
                 ImageURL: ProfileURL
             });
-            console.log(userDataRef);
+            setloading(false)
             Swal.fire({
                 title: "Profile!",
                 text: "Profile Updated!",
@@ -122,7 +123,7 @@ export default function Profile() {
                 Full_Name: UpdateUserName,
                 ImageURL: ProfileURL
             });
-            console.log(userDataRef);
+            setloading(false)
             Swal.fire({
                 title: "Profile!",
                 text: "Profile Updated!",
@@ -137,30 +138,29 @@ export default function Profile() {
     //  UPDATE PASSWORD //
 
     const updateUserPassword = () => {
+        setloading(true)
         const currentuser = auth.currentUser;
         if (UpdateNewPass == UpdateConfirmPass) {
 
-            console.log(UpdateOldPass);
-            console.log(UpdateNewPass);
-            console.log(UpdateConfirmPass);
             const credential = EmailAuthProvider.credential(
                 currentuser.email,
                 UpdateOldPass
             )
             reauthenticateWithCredential(currentuser, credential).then(async (res) => {
-                console.log('res--->', res);
                 updatePassword(currentuser, UpdateConfirmPass).then(() => {
                     Swal.fire({
                         title: "God job!",
                         text: "Password Updated!",
                         icon: "success"
                     });
+                    setloading(false)
                 }).catch((error) => {
                     Swal.fire({
                         icon: "error",
                         title: "Oops...",
                         text: error,
                     });
+                    setloading(false)
                 });
                 const userDataRef = doc(db, "users", CurrentUserDataID);
                 await updateDoc(userDataRef, {
@@ -172,6 +172,7 @@ export default function Profile() {
                     title: "Oops...",
                     text: error,
                 });
+                setloading(false)
             });
         }
         else {
@@ -180,6 +181,7 @@ export default function Profile() {
                 title: "Oops...",
                 text: "Please Confirm Password!",
             });
+            setloading(false)
         }
 
     }
@@ -226,6 +228,7 @@ export default function Profile() {
             </nav>
             <br /><br /><br /><br />
             <h1 id='Pro'><span>P</span>rofile</h1>
+            {loading && <LoaderComponent />}
 
             <div className='PeofileUpdateDiv'>
                 <div className="ProfileImgDiv">
