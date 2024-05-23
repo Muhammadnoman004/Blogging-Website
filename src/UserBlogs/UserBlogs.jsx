@@ -40,27 +40,6 @@ export default function UserBlogs() {
 
   return (
     <div>
-      <Navbar /><br /><br /><br /><br />
-
-      {/* {ID ? (
-        <>
-          <NavLink to={'/dashboard'}>
-            <button className='btn dashboardNavBtn'>Dashboard</button>
-          </NavLink>
-          <NavLink to={'/profile'}>
-            <button className='btn LoginNavBtn'>Profile</button>
-          </NavLink>
-          <NavLink to={'/'}>
-            <button className='btn LogOutNavBtn'>Logout</button>
-          </NavLink>
-        </>
-
-
-      ) : (
-        <Link to={'/signup'}>
-          <button className='btn SinupNavBtn'>Sign Up</button>
-        </Link>
-      )} */}
 
       {
         ID ?

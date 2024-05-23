@@ -117,7 +117,7 @@ export default function Dashboard() {
     await deleteDoc(doc(db, "AllBlogs", id));
     setloading(false)
     Swal.fire({
-      icon: "error",
+      icon: "success",
       title: "Delete...",
       text: "Deleted Successfully!",
     });
